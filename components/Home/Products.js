@@ -12,7 +12,6 @@ import {
   SafeAreaView,
   Modal,
   Button,
-  Picker,
 } from 'react-native';
 
 class Products extends Component {
