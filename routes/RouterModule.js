@@ -1,20 +1,45 @@
-import { createStackNavigator } from 'react-navigation-stack';
-import { createAppContainer } from 'react-navigation';
-import Dashboard from '../components/Home';
+import {createStackNavigator} from 'react-navigation-stack';
+import {createAppContainer} from 'react-navigation';
+import {Products} from '../components/Home';
 import {Signup, Signin} from '../components/Login';
 
-const screens = {
-    Signin: {
-        screen: Signin
+const LoginStack = createStackNavigator(
+  {
+    Login: {
+      screen: Signin,
     },
-    Dashboard: {
-        screen: Dashboard
+    Signup: Signup,
+  },
+  {
+    headerMode: 'none',
+    navigationOptions: {
+      headerShown: false,
     },
-    Signup: {
-        screen: Signup
-    }
-}
+  },
+);
 
-const RouterModule = createStackNavigator(screens);
+const HomeStack = createStackNavigator(
+  {
+    Products: Products,
+  },
+  {
+    headerMode: 'none',
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
+);
+
+const RouterModule = createStackNavigator({
+  Login: LoginStack,
+  Dashboard: HomeStack,
+},
+{
+  headerMode: 'none',
+  navigationOptions: {
+    headerShown: false,
+  },
+},
+);
 
 export default createAppContainer(RouterModule);

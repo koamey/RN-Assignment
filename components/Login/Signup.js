@@ -8,6 +8,7 @@ import {
   TextInput,
   Button,
   TouchableOpacity,
+  Text,
 } from 'react-native';
 
 export default class Signup extends Component {
@@ -23,27 +24,37 @@ export default class Signup extends Component {
 
   componentDidMount = () => {};
 
-  setName = (name) => {
-    this.setState({name: name});
+  setName = async (name) => {
+    await this.setState({name: name});
   };
 
-  setContactNo = (contactNo) => {
-    this.setState({contactNo: contactNo});
+  setContactNo = async (contactNo) => {
+    await this.setState({contactNo: contactNo});
   };
 
-  setEmail = (email) => {
-    this.setState({email: email});
+  setEmail = async (email) => {
+    await this.setState({email: email});
   };
 
-  setPassword = (password) => {
-    this.setState({password: password});
+  setPassword = async (password) => {
+    await this.setState({password: password});
   };
 
   onPressSignup = async () => {
-    if (this.state.name == '' || this.state.email == '' || this.state.password == '') {
+    if (
+      this.state.name == '' ||
+      this.state.email == '' ||
+      this.state.password == ''
+    ) {
       console.log('enter all details');
     } else {
-      const user = {id: 1, name: this.state.name, contactNo: this.state.contactNo, email: this.state.email, password: this.state.password};
+      const user = {
+        id: 1,
+        name: this.state.name,
+        contactNo: this.state.contactNo,
+        email: this.state.email,
+        password: this.state.password,
+      };
       const existingUsers = await AsyncStorage.getItem('users');
       let newUser = JSON.parse(existingUsers);
       if (!newUser) {
@@ -51,13 +62,13 @@ export default class Signup extends Component {
       }
       newUser.push(user);
       await AsyncStorage.setItem('users', JSON.stringify(newUser))
-        .then(() => {
+        .then(async () => {
           console.log('saved successfully');
           this.setState({name: ''});
           this.setState({contactNo: ''});
           this.setState({email: ''});
           this.setState({password: ''});
-          this.props.navigation.navigate('Signin');
+          this.props.navigation.navigate('Login');
         })
         .catch(() => {
           console.log('failed');
@@ -65,44 +76,45 @@ export default class Signup extends Component {
     }
   };
 
+  signInNow = () => {
+    this.props.navigation.navigate('Login');
+  };
+
   render() {
     return (
       <View style={styles.container}>
         <Image style={styles.image} source={require('../../assets/icon.png')} />
-        <View style={styles.inputView}>
+        <View style={globalStyles.inputView}>
           <TextInput
-            style={styles.TextInput}
+            style={globalStyles.TextInput}
             placeholder="Enter name"
             placeholderTextColor="#000000"
             onChangeText={(name) => this.setName(name)}
             value={this.state.name}
           />
         </View>
-
-        <View style={styles.inputView}>
+        <View style={globalStyles.inputView}>
           <TextInput
-            style={styles.TextInput}
+            style={globalStyles.TextInput}
             placeholder="Enter phone number"
             placeholderTextColor="#000000"
             onChangeText={(contactNo) => this.setContactNo(contactNo)}
             value={this.state.contactNo}
           />
         </View>
-
-        <View style={styles.inputView}>
+        <View style={globalStyles.inputView}>
           <TextInput
-            style={styles.TextInput}
-            autoCapitalize='none'
+            style={globalStyles.TextInput}
+            autoCapitalize="none"
             placeholder="Enter email"
             placeholderTextColor="#000000"
             onChangeText={(email) => this.setEmail(email)}
             value={this.state.email}
           />
         </View>
-
-        <View style={styles.inputView}>
+        <View style={globalStyles.inputView}>
           <TextInput
-            style={styles.TextInput}
+            style={globalStyles.TextInput}
             placeholder="Enter password"
             placeholderTextColor="#000000"
             secureTextEntry={true}
@@ -110,10 +122,13 @@ export default class Signup extends Component {
             value={this.state.password}
           />
         </View>
-
         <TouchableOpacity style={styles.loginBtn}>
           <Button title="Sign up" onPress={this.onPressSignup} />
         </TouchableOpacity>
+        <View style={styles.signInBtn}>
+          <Text style={{fontSize: 16}}>Already have an account?</Text>
+          <Button title="Sign in" onPress={this.signInNow} />
+        </View>
       </View>
     );
   }
@@ -126,45 +141,34 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-
   image: {
     marginBottom: 40,
     width: 150,
     height: 150,
     borderRadius: 100,
   },
-
-  inputView: {
-    backgroundColor: '#f3f2f2',
-    borderRadius: 30,
-    width: '70%',
-    height: 45,
-    marginBottom: 20,
-
-    alignItems: 'center',
-  },
-
-  TextInput: {
-    height: 50,
-    flex: 1,
-    padding: 10,
-    marginLeft: 20,
-  },
-
   forgot_button: {
     height: 30,
     marginBottom: 30,
     color: '#003f5c',
     alignItems: 'center',
   },
-
   loginBtn: {
-    width: '80%',
+    width: '90%',
     borderRadius: 25,
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 30,
+    marginTop: 20,
     backgroundColor: '#f3f2f2',
+  },
+  signInBtn: {
+    width: '90%',
+    borderRadius: 25,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    marginTop: 10,
   },
 });

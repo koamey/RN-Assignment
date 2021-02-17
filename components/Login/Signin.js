@@ -9,6 +9,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { StackActions, NavigationActions } from 'react-navigation';
 
 class Signin extends Component {
   constructor(props) {
@@ -19,20 +20,27 @@ class Signin extends Component {
     };
   }
 
+  resetAction = StackActions.reset({
+    index: 0,
+    actions: [
+      NavigationActions.navigate({ routeName: 'Dashboard' }),
+    ],
+  });
+
   componentDidMount = () => {};
 
-  setEmail = (email) => {
-    this.setState({email: email});
+  setEmail = async (email) => {
+    await this.setState({email: email});
   };
 
-  setPassword = (password) => {
-    this.setState({password: password});
+  setPassword = async (password) => {
+    await this.setState({password: password});
   };
 
-  onPressSignup = () => {
-    this.setState({email: ''});
-    this.setState({password: ''});
+  onPressSignup = async () => {
     this.props.navigation.navigate('Signup');
+    await this.setState({email: ''});
+    await this.setState({password: ''});
   };
 
   onPressLogin = async () => {
@@ -48,6 +56,7 @@ class Signin extends Component {
           this.state.password == newUser[i]['password']
         ) {
           this.props.navigation.navigate('Dashboard');
+          // this.props.navigation.dispatch(this.resetAction);
           this.setState({email: ''});
           this.setState({password: ''});
           console.log('exists');
@@ -62,10 +71,9 @@ class Signin extends Component {
     return (
       <View style={styles.container}>
         <Image style={styles.image} source={require('../../assets/icon.png')} />
-
-        <View style={styles.inputView}>
+        <View style={globalStyles.inputView}>
           <TextInput
-            style={styles.TextInput}
+            style={globalStyles.TextInput}
             autoCapitalize='none'
             onChangeText={(email) => this.setEmail(email)}
             placeholder="Enter Email or Contact number"
@@ -73,10 +81,9 @@ class Signin extends Component {
             value={this.state.email}
           />
         </View>
-
-        <View style={styles.inputView}>
+        <View style={globalStyles.inputView}>
           <TextInput
-            style={styles.TextInput}
+            style={globalStyles.TextInput}
             secureTextEntry={true}
             onChangeText={(password) => this.setPassword(password)}
             placeholder="Enter password"
@@ -84,11 +91,9 @@ class Signin extends Component {
             value={this.state.password}
           />
         </View>
-
         <TouchableOpacity>
           <Button title="Sign up now!" onPress={this.onPressSignup} />
         </TouchableOpacity>
-
         <TouchableOpacity style={styles.loginBtn}>
           <Button title="LOGIN" onPress={this.onPressLogin} />
         </TouchableOpacity>
@@ -104,39 +109,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-
   image: {
     marginBottom: 40,
     width: 150,
     height: 150,
     borderRadius: 100,
   },
-
-  inputView: {
-    backgroundColor: '#f3f2f2',
-    borderRadius: 30,
-    width: '70%',
-    height: 45,
-    marginBottom: 20,
-    alignItems: 'center',
-  },
-
-  TextInput: {
-    height: 50,
-    flex: 1,
-    padding: 10,
-    marginLeft: 20,
-  },
-
   forgot_button: {
     height: 30,
     marginBottom: 30,
     color: '#003f5c',
     alignItems: 'center',
   },
-
   loginBtn: {
-    width: '80%',
+    width: '90%',
     borderRadius: 25,
     height: 50,
     alignItems: 'center',
